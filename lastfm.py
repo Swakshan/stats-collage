@@ -2,6 +2,22 @@ from common import getEnv
 from utils import Data
 import requests
 from ytmusicapi import YTMusic
+from datetime import datetime,timedelta
+from pytz import timezone
+
+
+def getTimestamps():
+    TZ = timezone('Asia/Kolkata')
+    today = datetime.now(tz=TZ)
+    sunTimedelta = today.weekday() - 1
+    
+    endDate = today + timedelta(days=sunTimedelta)
+    startDate = endDate - timedelta(days=6)
+    
+    startTS = startDate.replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
+    endTS = endDate.replace(hour=23, minute=59, second=59, microsecond=999999).timestamp()
+    return int(startTS), int(endTS)
+
 
 def getYTImage(name,type):
     YTM = YTMusic()
@@ -10,16 +26,16 @@ def getYTImage(name,type):
     return search[0]['thumbnails'][1]['url'].replace("w120-h120","w720-h720")
 
 
-def requestAPI(slug):
-    API = 'https://ws.audioscrobbler.com/2.0/?api_key='+getEnv('LASTFM_API_KEY')+'&format=json&extended=1&method='+slug
+def requestAPI(slug,start,end,limit=200):
+    API = 'https://ws.audioscrobbler.com/2.0/?api_key='+getEnv('LASTFM_API_KEY')+'&format=json&extended=1&method='+slug+'&user='+getEnv('LASTFM_USERNAME')+'&limit='+str(limit)+'&from='+str(start)+'&to='+str(end)
     response = requests.get(API)
     stsCode = response.status_code
     if stsCode !=requests.codes.ok: raise Exception("Error: Lastfm API request failed. Status code: "+stsCode)
     return response.json()
 
-def getTrackChart(username,start,end,limit=5):
-    slug = 'user.getweeklytrackchart&user='+username+'&limit='+str(limit)+'&from='+str(start)+'&to='+str(end)
-    res = requestAPI(slug)
+def getTrackChart(start,end,limit=5):
+    slug = 'user.getweeklytrackchart'
+    res = requestAPI(slug,start,end,limit)
     tracks = []
     for track in res['weeklytrackchart']['track']:
         artist = track['artist']['#text']
@@ -36,8 +52,8 @@ def getTrackChart(username,start,end,limit=5):
 
 
 def getArtistChart(username,start,end,limit=5):
-    slug = 'user.getweeklyartistchart&user='+username+'&limit='+str(limit)+'&from='+str(start)+'&to='+str(end)
-    res = requestAPI(slug)
+    slug = 'user.getweeklyartistchart'
+    res = requestAPI(slug,start,end,limit)
     tracks = []
     for track in res['weeklyartistchart']['artist']:
         title = ""
@@ -51,9 +67,9 @@ def getArtistChart(username,start,end,limit=5):
         tracks.append(data)
     return tracks
 
-def getAlbumChart(username,start,end,limit=5):
-    slug = 'user.getweeklyalbumchart&user='+username+'&limit='+str(limit)+'&from='+str(start)+'&to='+str(end)
-    res = requestAPI(slug)
+def getAlbumChart(start,end,limit=5):
+    slug = 'user.getweeklyalbumchart'
+    res = requestAPI(slug,start,end,limit)
     tracks = []
     for track in res['weeklyalbumchart']['album']:
         artist = track['artist']['#text']
@@ -65,6 +81,39 @@ def getAlbumChart(username,start,end,limit=5):
         
         tracks.append(data)
     return tracks
+
+def getAlbumChart(start,end,limit=5):
+    slug = 'user.getRecentTracks'
+    res = requestAPI(slug,start,end,limit)
+    tracks = []
+    for track in res['weeklyalbumchart']['album']:
+        artist = track['artist']['#text']
+        title = track['name']
+        scrobble = track['playcount']
+        imageUrl = getYTImage(f"{artist} - {title}","albums")
+        data = Data(title,artist,imageUrl,scrobble)
+        data.generateImage()
+        
+        tracks.append(data)
+    return tracks
+
+def getRecentTracks(start,end,limit=200):
+    totalPages = 999
+    page = 1
+    slug = 'user.getRecentTracks'
+    tracks = []
+    while page <= totalPages:
+        res = requestAPI(f'{slug}&page={page}',start,end,limit)
+        
+        track = res['recenttracks']['track']
+        tracks.extend(track)
+        
+        attr = res['recenttracks']['@attr']
+        totalPages = int(attr['totalPages'])
+        page = int(attr['page']) + 1
+        
+    return tracks
+
 
     #     album = track['album']['name']
     #     timestamp = track['date']['uts']
