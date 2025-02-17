@@ -41,28 +41,25 @@ def getTrackChart(start,end,limit=5):
         artist = track['artist']['#text']
         title = track['name']
         scrobble = track['playcount']
-        # artist.split("&")[0].split(",")[0]
         imageUrl = getYTImage(title,"songs")
         
         data = Data(title,artist,imageUrl,scrobble)
-        data.generateImage()
         
         tracks.append(data)
     return tracks
 
 
-def getArtistChart(username,start,end,limit=5):
+def getArtistChart(start,end,limit=5):
     slug = 'user.getweeklyartistchart'
     res = requestAPI(slug,start,end,limit)
     tracks = []
     for track in res['weeklyartistchart']['artist']:
         title = ""
-        artist = track['name']
+        artist = track['name'].split("&")[0].split(",")[0]
         scrobble = track['playcount']
         imageUrl = getYTImage(artist,"artists")
         
         data = Data(title,artist,imageUrl,scrobble)
-        data.generateImage()
         
         tracks.append(data)
     return tracks
@@ -76,8 +73,8 @@ def getAlbumChart(start,end,limit=5):
         title = track['name']
         scrobble = track['playcount']
         imageUrl = getYTImage(f"{artist} - {title}","albums")
+        
         data = Data(title,artist,imageUrl,scrobble)
-        data.generateImage()
         
         tracks.append(data)
     return tracks
@@ -91,8 +88,8 @@ def getAlbumChart(start,end,limit=5):
         title = track['name']
         scrobble = track['playcount']
         imageUrl = getYTImage(f"{artist} - {title}","albums")
+        
         data = Data(title,artist,imageUrl,scrobble)
-        data.generateImage()
         
         tracks.append(data)
     return tracks
@@ -113,8 +110,3 @@ def getRecentTracks(start,end,limit=200):
         page = int(attr['page']) + 1
         
     return tracks
-
-
-    #     album = track['album']['name']
-    #     timestamp = track['date']['uts']
-
