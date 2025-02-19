@@ -111,14 +111,13 @@ def getRecentTracks(start,end,limit=200):
 
 def getRecentTracksTimestamp(start,end,limit=200):
     tracks = getRecentTracks(start,end,limit)
-    
     TZ = timezone('Asia/Kolkata')
     dt = []
     for track in tracks:
         if 'date' not in track:
             continue
         date_str = track['date']['uts']
-        dt.append(datetime.fromtimestamp(int(date_str),tz=TZ))
         
+        dt.append(datetime.fromtimestamp(int(date_str),tz=TZ))
     return dt
 
