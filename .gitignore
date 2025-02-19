@@ -173,6 +173,11 @@ cython_debug/
 # Mine
 test.py
 dummy/
-images/
 img/
 test/
+*jpg
+*png
+*jpeg
+images/*png
+images/*jpg
+images/*jpeg

@@ -1,4 +1,4 @@
-from common import getEnv
+from common import getEnv,readJsonFile,writeJsonFile
 from utils import Data
 import requests
 from ytmusicapi import YTMusic
@@ -9,9 +9,8 @@ from pytz import timezone
 def getTimestamps():
     TZ = timezone('Asia/Kolkata')
     today = datetime.now(tz=TZ)
-    sunTimedelta = today.weekday() - 1
-    
-    endDate = today + timedelta(days=sunTimedelta)
+    sunTimedelta = today.isoweekday()
+    endDate = today - timedelta(days=sunTimedelta)
     startDate = endDate - timedelta(days=6)
     
     startTS = startDate.replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
@@ -108,5 +107,18 @@ def getRecentTracks(start,end,limit=200):
         attr = res['recenttracks']['@attr']
         totalPages = int(attr['totalPages'])
         page = int(attr['page']) + 1
-        
     return tracks
+
+def getRecentTracksTimestamp(start,end,limit=200):
+    tracks = getRecentTracks(start,end,limit)
+    
+    TZ = timezone('Asia/Kolkata')
+    dt = []
+    for track in tracks:
+        if 'date' not in track:
+            continue
+        date_str = track['date']['uts']
+        dt.append(datetime.fromtimestamp(int(date_str),tz=TZ))
+        
+    return dt
+
