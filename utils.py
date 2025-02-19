@@ -1,51 +1,40 @@
-from PIL import Image,ImageDraw,ImageFont
-import requests
-from dataclasses import dataclass
-from io import BytesIO
 from datetime import datetime,timedelta
+from io import BytesIO
 import matplotlib.pyplot as plt
-
-IMG_ARTIST = "./images/TopArtist.png"
-IMG_ALBUM = "./images/TopAlbum.png"
-IMG_TRACK = "./images/TopTrack.png"
-IMG_CHARTS = "./images/Charts.png"
+from PIL import Image,ImageDraw,ImageFont
+from modal import IMG_CHARTS,IMG_TRACK,IMG_ARTIST,IMG_ALBUM,Data
+from lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks
 
 
-@dataclass
-class Data:
-    name: str
-    artist: str
-    imageUrl: str
-    scrobble: int = 0
+def combineImages(items,heading):
+    lenItems = len(items)
+    pad = 100
+    h,w = 720,lenItems*720
+    combineImage = Image.new('RGB',(w,h+pad))
+
+    for i in range(lenItems):
+        item:Data = items[i]
+        img:Image = item.generateImage()
+        combineImage.paste(img,(i*h,pad))
+
+    draw = ImageDraw.Draw(combineImage)
+    headfont = ImageFont.truetype("arial.ttf",80)
+    draw.text((30, 10), heading,font=headfont,stroke_width=2,stroke_fill='white')
+    return combineImage
+
+
+def saveTopItems(start,end):
+    combineImages(getTopArtists(start,end),"Top Artists").save(IMG_ARTIST)
+    print("Artists saved")
     
-    def __repr__(self):
-        return f"Data(name={self.name}, artist={self.artist}, imageUrl={self.imageUrl}, scrobble={self.scrobble})"
+    combineImages(getTopAlbums(start,end),"Top Albums").save(IMG_ALBUM)
+    print("Albums saved")
     
-    def __url2Img(self):
-        content = requests.get(self.imageUrl).content
-        return BytesIO(content)
-    
-    def generateImage(self):
-        fontName = "arial.ttf"
-        xAxis = 35
-        bytes_decoded = self.__url2Img()
-        img = Image.open(bytes_decoded)
-        draw = ImageDraw.Draw(img)
-        
-        headfont = ImageFont.truetype(fontName, 50)
-        subfont = ImageFont.truetype(fontName, 30)
-        
-        if len(self.name):
-            draw.text((xAxis, 530), self.name,font=headfont,stroke_width=10,stroke_fill='#000')
-            draw.text((xAxis, 610), self.artist,font=subfont,stroke_width=9,stroke_fill='#000')
-        else:
-            draw.text((xAxis, 590), self.artist,font=headfont,stroke_width=10,stroke_fill='#000')
-        
-        draw.text((xAxis, 670), f"{self.scrobble} Scrobbles",font=subfont,stroke_width=9,stroke_fill='#000')
-        return img
+    combineImages(getTopTracks(start,end),"Top Tracks").save(IMG_TRACK)
+    print("Tracks saved")
 
 
-def formCharts(tracks,start):
+def saveCharts(start,end):
     def barChart(CHART,title,keys,values,xlabel,ylabel,barColor):
         bars = CHART.bar(keys, values, color=barColor, edgecolor='white', width=0.5,linewidth=1.5)
         
@@ -78,7 +67,8 @@ def formCharts(tracks,start):
             height = bar.get_height()
             CHART.text(bar.get_x() + bar.get_width() / 2, height + 0.5, f'{height}', 
                     ha='center', va='bottom', fontsize=12, fontweight='bold', color='white')
-            
+    
+    tracks = getRecentTracksTimestamp(start,end)        
     hrly = {}
     freq = {}
     startFreqDate = datetime.fromtimestamp(start)

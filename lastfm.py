@@ -1,5 +1,5 @@
 from common import getEnv,readJsonFile,writeJsonFile
-from utils import Data
+from modal import Data
 import requests
 from ytmusicapi import YTMusic
 from datetime import datetime,timedelta
@@ -32,7 +32,7 @@ def requestAPI(slug,start,end,limit=200):
     if stsCode !=requests.codes.ok: raise Exception("Error: Lastfm API request failed. Status code: "+stsCode)
     return response.json()
 
-def getTrackChart(start,end,limit=5):
+def getTopTracks(start,end,limit=5):
     slug = 'user.getweeklytrackchart'
     res = requestAPI(slug,start,end,limit)
     tracks = []
@@ -43,12 +43,11 @@ def getTrackChart(start,end,limit=5):
         imageUrl = getYTImage(title,"songs")
         
         data = Data(title,artist,imageUrl,scrobble)
-        
         tracks.append(data)
     return tracks
 
 
-def getArtistChart(start,end,limit=5):
+def getTopArtists(start,end,limit=5):
     slug = 'user.getweeklyartistchart'
     res = requestAPI(slug,start,end,limit)
     tracks = []
@@ -59,11 +58,10 @@ def getArtistChart(start,end,limit=5):
         imageUrl = getYTImage(artist,"artists")
         
         data = Data(title,artist,imageUrl,scrobble)
-        
         tracks.append(data)
     return tracks
 
-def getAlbumChart(start,end,limit=5):
+def getTopAlbums(start,end,limit=5):
     slug = 'user.getweeklyalbumchart'
     res = requestAPI(slug,start,end,limit)
     tracks = []
@@ -74,22 +72,6 @@ def getAlbumChart(start,end,limit=5):
         imageUrl = getYTImage(f"{artist} - {title}","albums")
         
         data = Data(title,artist,imageUrl,scrobble)
-        
-        tracks.append(data)
-    return tracks
-
-def getAlbumChart(start,end,limit=5):
-    slug = 'user.getRecentTracks'
-    res = requestAPI(slug,start,end,limit)
-    tracks = []
-    for track in res['weeklyalbumchart']['album']:
-        artist = track['artist']['#text']
-        title = track['name']
-        scrobble = track['playcount']
-        imageUrl = getYTImage(f"{artist} - {title}","albums")
-        
-        data = Data(title,artist,imageUrl,scrobble)
-        
         tracks.append(data)
     return tracks
 
