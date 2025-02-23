@@ -6,34 +6,29 @@ from modal import IMG_CHARTS,IMG_TRACK,IMG_ARTIST,IMG_ALBUM,Data
 from lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings
 
 
-def combineImages(items,heading):
+def combineImages(items):
     lenItems = len(items)
-    pad = 100
     h,w = 720,lenItems*720
-    combineImage = Image.new('RGB',(w,h+pad))
+    combineImage = Image.new('RGB',(w,h))
 
     for i in range(lenItems):
         item:Data = items[i]
         img:Image = item.generateImage()
-        combineImage.paste(img,(i*h,pad))
-
-    draw = ImageDraw.Draw(combineImage)
-    headfont = ImageFont.truetype("arial.ttf",80)
-    draw.text((30, 10), heading,font=headfont,stroke_width=2,stroke_fill='white')
+        combineImage.paste(img,(i*h,0))
     return combineImage
 
 
 def saveTopItems(start,end):
     topTracks,topArtists,topAlbums = findTopRatings(start,end)
     
-    combineImages(getTopArtists(topArtists),"Top Artists").save(IMG_ARTIST)
-    print("Artists saved")
+    combineImages(getTopArtists(topArtists)).save(IMG_ARTIST)
+    print("IMG: Artists saved")
     
-    combineImages(getTopAlbums(topAlbums),"Top Albums").save(IMG_ALBUM)
-    print("Albums saved")
+    combineImages(getTopAlbums(topAlbums)).save(IMG_ALBUM)
+    print("IMG: Albums saved")
     
-    combineImages(getTopTracks(topTracks),"Top Tracks").save(IMG_TRACK)
-    print("Tracks saved")
+    combineImages(getTopTracks(topTracks)).save(IMG_TRACK)
+    print("IMG: Tracks saved")
 
 
 def saveCharts(start,end):
