@@ -1,5 +1,5 @@
 from PIL import Image,ImageDraw,ImageFont
-import requests
+import requests,json
 from dataclasses import dataclass
 from io import BytesIO
 from datetime import datetime,timedelta
@@ -17,6 +17,7 @@ class Data:
     artist: str
     imageUrl: str
     scrobble: int = 0
+    loved:bool = False
     
     def __repr__(self):
         return f"Data(name={self.name}, artist={self.artist}, imageUrl={self.imageUrl}, scrobble={self.scrobble})"
@@ -29,6 +30,7 @@ class Data:
         fontName = "arial.ttf"
         xAxis = 35
         bytes_decoded = self.__url2Img()
+        # bytes_decoded = "./images/unnamed.jpg"
 
         img = Image.open(bytes_decoded)
         draw = ImageDraw.Draw(img)
@@ -44,3 +46,16 @@ class Data:
         
         draw.text((xAxis, 670), f"{self.scrobble} Scrobbles",font=subfont,stroke_width=9,stroke_fill='#000')
         return img
+    
+@dataclass
+class Item:
+    name:str
+    scrobble:int = 0
+    loved:bool = False
+    
+    def __str__(self):
+        return f"{self.name} - {self.scrobble} - {'Loved' if self.loved else 'Not Loved'}"
+
+    def json(self):
+        return json.dumps({"name":self.name,"scrobble":self.scrobble,"loved":self.loved})
+

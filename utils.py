@@ -3,7 +3,7 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 from PIL import Image,ImageDraw,ImageFont
 from modal import IMG_CHARTS,IMG_TRACK,IMG_ARTIST,IMG_ALBUM,Data
-from lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks
+from lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings
 
 
 def combineImages(items,heading):
@@ -24,13 +24,15 @@ def combineImages(items,heading):
 
 
 def saveTopItems(start,end):
-    combineImages(getTopArtists(start,end),"Top Artists").save(IMG_ARTIST)
+    topTracks,topArtists,topAlbums = findTopRatings(start,end)
+    
+    combineImages(getTopArtists(topArtists),"Top Artists").save(IMG_ARTIST)
     print("Artists saved")
     
-    combineImages(getTopAlbums(start,end),"Top Albums").save(IMG_ALBUM)
+    combineImages(getTopAlbums(topAlbums),"Top Albums").save(IMG_ALBUM)
     print("Albums saved")
     
-    combineImages(getTopTracks(start,end),"Top Tracks").save(IMG_TRACK)
+    combineImages(getTopTracks(topTracks),"Top Tracks").save(IMG_TRACK)
     print("Tracks saved")
 
 
