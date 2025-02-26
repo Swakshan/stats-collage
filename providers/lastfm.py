@@ -1,6 +1,6 @@
 from common import getEnv,readJsonFile,writeJsonFile
 from modal import Data,Item
-import requests
+import requests,os
 from ytmusicapi import YTMusic
 from datetime import datetime,timedelta
 from pytz import timezone
@@ -94,6 +94,9 @@ def getTopAlbums(start,end,limit=5):
     return tracks
 
 def getRecentTracks(start,end,limit=200):
+    cache_file = "./dummy/getrecenttracks.json"
+    if os.path.exists(cache_file):
+        return readJsonFile(cache_file)
     totalPages = 999
     page = 1
     slug = 'user.getRecentTracks'
@@ -107,6 +110,7 @@ def getRecentTracks(start,end,limit=200):
         attr = res['recenttracks']['@attr']
         totalPages = int(attr['totalPages'])
         page = int(attr['page']) + 1
+    writeJsonFile(tracks,cache_file)
     return tracks
 
 def getRecentTracksTimestamp(start,end,limit=200):

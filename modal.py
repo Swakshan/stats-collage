@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 IMG_ARTIST = "./images/TopArtist.png"
 IMG_ALBUM = "./images/TopAlbum.png"
 IMG_TRACK = "./images/TopTrack.png"
-IMG_CHARTS = "./images/Charts.png"
+LASTM_IMG_DAILY_CHART = "./images/dailyListenPattern.png"
+LASTM_IMG_HOURLY_CHART = "./images/hourlyListenPattern.png"
 
 
 @dataclass
