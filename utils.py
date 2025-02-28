@@ -2,7 +2,7 @@ from datetime import datetime,timedelta
 
 from PIL import Image,ImageFont,ImageDraw
 from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,Data,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL
-from providers.lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings,weekCalculator
+from providers.lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings,weekCalculator,getTimestamps
 from common import buildChart
 
 #----------------------------------
@@ -91,5 +91,13 @@ def makeWeeklyCollage(start):
     BG.save(IMG_FINAL)
     print("IMG: Weekly Collage saved")
     # BG.show()
+
+def buildWeekly():
+    start,end = getTimestamps()
     
+    saveTopItems(start,end)
+    saveWeeklyCharts(start,end)
+    
+    makeWeeklyCollage(start)
+
 #----------------------------------
