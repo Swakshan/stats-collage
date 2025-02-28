@@ -11,6 +11,6 @@ try:
         tele.sendImage(message=msg,imagePath=img)
     
 except Exception as e:
-    tele.sendMessage(str(e))
+    tele.sendMessage("ERROR: "+str(e))
     
 
