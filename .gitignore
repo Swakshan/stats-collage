@@ -172,7 +172,7 @@ cython_debug/
 
 # Mine
 test.py
-dummy/
+# dummy/
 img/
 test/
 # *jpg
@@ -181,4 +181,5 @@ test/
 # images/*png
 # # images/*jpg
 # images/*jpeg
+*json
 TODO

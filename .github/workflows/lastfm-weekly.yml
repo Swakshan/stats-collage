@@ -1,0 +1,38 @@
+name: LastFM Weekly Run
+
+on:
+  schedule:
+    # Runs At 19:00UTC on Monday.
+    - cron: '0 19 * * 1'
+  workflow_dispatch:  # Allows manual triggering
+    
+jobs:
+  manual-extract:
+    runs-on: ubuntu-latest
+    env:
+      LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+      LASTFM_USERNAME: ${{ secrets.LASTFM_USERNAME }}
+      TELE_BOT_TOKEN: ${{ secrets.TELE_BOT_TOKEN }}
+      TELE_CHNANNEL_ID: ${{ secrets.TELE_CHNANNEL_ID }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run script
+      env:
+        LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+        LASTFM_USERNAME: ${{ secrets.LASTFM_USERNAME }}
+        TELE_BOT_TOKEN: ${{ secrets.TELE_BOT_TOKEN }}
+        TELE_CHNANNEL_ID: ${{ secrets.TELE_CHNANNEL_ID }}    
+      run: python main.py
