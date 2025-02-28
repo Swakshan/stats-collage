@@ -1,7 +1,7 @@
 from datetime import datetime,timedelta
 
-from PIL import Image,ImageDraw,ImageFont
-from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,Data,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART
+from PIL import Image
+from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,Data,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL
 from providers.lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings
 from common import buildChart
 
@@ -16,6 +16,8 @@ def combineImages(items):
         item:Data = items[i]
         img:Image = item.generateImage()
         combineImage.paste(img,(i*h,0))
+        
+    combineImage = combineImage.resize([1440, 288]) #[int(combineImage.width*0.4),int(combineImage.height*0.4)]
     return combineImage
 
 
@@ -51,6 +53,33 @@ def saveWeeklyCharts(start,end):
     
     buildChart('Daily listen pattern',freq.keys(), freq.values(),'Date','Count','#005582',LASTM_IMG_DAILY_CHART)
     buildChart('Hourly listen pattern',hrly.keys(), hrly.values(),'Hour','Count','#00c2c7',LASTM_IMG_HOURLY_CHART)
-    
 
+
+def makeWeeklyCollage():
+    BG = Image.open(IMG_TEMP)
+    
+    ALBUM = Image.open(IMG_ALBUM) #.resize([1440, 288]) #[int(ALBUM.width*0.4),int(ALBUM.height*0.4)]
+    ARTIST = Image.open(IMG_ARTIST) #.resize([1440, 288])
+    TRACK = Image.open(IMG_TRACK) #.resize([1440, 288])
+    
+    x = 25
+    y = 215
+    offset = 385
+    BG.paste(ALBUM, (x,y)) 
+    BG.paste(ARTIST, (x,y+offset)) 
+    BG.paste(TRACK, (x,y+(offset*2)))
+    
+    DAILYCHART = Image.open(LASTM_IMG_DAILY_CHART).resize([1425, 550])
+    HOURLYCHART = Image.open(LASTM_IMG_HOURLY_CHART).resize([1425, 550])
+
+    y = 1300
+    offset = 540
+    BG.paste(DAILYCHART, (x,y))
+    BG.paste(HOURLYCHART, (x,y+offset))
+  
+    # # Displaying the image 
+    BG.save(IMG_FINAL)
+    print("IMG: Weekly Collage saved")
+    # BG.show()
+    
 #----------------------------------

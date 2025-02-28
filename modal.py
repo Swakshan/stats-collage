@@ -5,6 +5,8 @@ from io import BytesIO
 from datetime import datetime,timedelta
 import matplotlib.pyplot as plt
 
+IMG_TEMP = "./images/template.jpg"
+IMG_FINAL = "./images/final.png"
 IMG_ARTIST = "./images/TopArtist.png"
 IMG_ALBUM = "./images/TopAlbum.png"
 IMG_TRACK = "./images/TopTrack.png"
@@ -31,21 +33,21 @@ class Data:
         fontName = "arial.ttf"
         xAxis = 35
         bytes_decoded = self.__url2Img()
-        # bytes_decoded = "./images/unnamed.jpg"
+        # bytes_decoded = "./images/unnamed.jpeg"
 
         img = Image.open(bytes_decoded)
         draw = ImageDraw.Draw(img)
         
-        headfont = ImageFont.truetype(fontName, 50)
-        subfont = ImageFont.truetype(fontName, 30)
+        headfont = ImageFont.truetype(fontName, 70)
+        subfont = ImageFont.truetype(fontName, 50)
         
-        if len(self.name):
-            draw.text((xAxis, 530), self.name,font=headfont,stroke_width=10,stroke_fill='#000')
-            draw.text((xAxis, 610), self.artist,font=subfont,stroke_width=9,stroke_fill='#000')
+        if len(self.name): #if both title and artist are not empty
+            draw.text((xAxis, 520), self.name,font=headfont,stroke_width=8,stroke_fill='#000')
+            draw.text((xAxis, 600), self.artist,font=subfont,stroke_width=7,stroke_fill='#000')
         else:
-            draw.text((xAxis, 590), self.artist,font=headfont,stroke_width=10,stroke_fill='#000')
+            draw.text((xAxis, 580), self.artist,font=headfont,stroke_width=8,stroke_fill='#000')
         
-        draw.text((xAxis, 670), f"{self.scrobble} Scrobbles",font=subfont,stroke_width=9,stroke_fill='#000')
+        draw.text((xAxis, 660), f"{self.scrobble} Scrobbles",font=subfont,stroke_width=7,stroke_fill='#000')
         return img
     
 @dataclass

@@ -30,16 +30,16 @@ def buildChart(title,keys,values,xlabel,ylabel,barColor,savePath):
         bars = CHART.bar(keys, values, color=barColor, edgecolor='white', width=0.5,linewidth=1.5)
         
         #title
-        title_font = {'size':25, 'color':'white', 'weight':'bold','pad':30}
+        title_font = {'size':25, 'color':'white', 'weight':'bold','pad':20}
         title = CHART.set_title(title,**title_font)
         
         # Labels
-        labels_font = {'size':12, 'color':'white', 'weight':'medium'}
+        labels_font = {'size':18, 'color':'white', 'weight':'medium'}
         CHART.set_xlabel(xlabel, **labels_font)
         CHART.set_ylabel(ylabel, **labels_font)
 
         # Customize Ticks
-        tick_font = {'labelsize':10, 'colors':'white'}
+        tick_font = {'labelsize':17, 'colors':'white'}
         CHART.tick_params(axis='x', **tick_font)
         CHART.tick_params(axis='y', **tick_font)
 
@@ -57,14 +57,14 @@ def buildChart(title,keys,values,xlabel,ylabel,barColor,savePath):
         for bar in bars:
             height = bar.get_height()
             CHART.text(bar.get_x() + bar.get_width() / 2, height + 0.5, f'{height}', 
-                    ha='center', va='bottom', fontsize=12, fontweight='bold', color='white')
+                    ha='center', va='bottom', fontsize=17, fontweight='bold', color='white')
         #fig.set_facecolor("black")
         plt.tight_layout()
         plt.subplots_adjust(top=0.85)
 
         # Save or display the chart
         plt.savefig(savePath, dpi=300, bbox_inches='tight')
-        print("SAVED: "+savePath)
+        print("IMG: "+savePath)
         #plt.show()
     except Exception as e:
         print(str(e))
