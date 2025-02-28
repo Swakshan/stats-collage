@@ -14,13 +14,13 @@ def printJson(data):
 def writeJsonFile(data,filename):
     with open(filename, 'w',encoding="utf-8") as f:
         f.write(json.dumps(data, ensure_ascii=False, indent=4))
-    print("SAVED: "+filename)
+    print("SAVE: "+filename)
     
 def readJsonFile(OUT_PATH):
     f = open(OUT_PATH, 'r',encoding='utf-8')
     data = json.load(f)
     f.close()
-    print("Loaded: "+OUT_PATH)
+    print("LOAD: "+OUT_PATH)
     return data
 
 

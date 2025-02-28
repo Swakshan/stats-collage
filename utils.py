@@ -1,9 +1,11 @@
 from datetime import datetime,timedelta
 
 from PIL import Image,ImageFont,ImageDraw
-from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,Data,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL
+from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL
+from modal import Data,Tele
 from providers.lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings,weekCalculator,getTimestamps
 from common import buildChart
+
 
 #----------------------------------
 # LASTFM
@@ -88,7 +90,7 @@ def makeWeeklyCollage(start):
     BG.paste(HOURLYCHART, (x,y+offset))
   
     # # Displaying the image 
-    BG.save(IMG_FINAL)
+    BG.save(IMG_FINAL, optimize=True)
     print("IMG: Weekly Collage saved")
     # BG.show()
 
@@ -99,5 +101,9 @@ def buildWeekly():
     saveWeeklyCharts(start,end)
     
     makeWeeklyCollage(start)
+    
+    dayCounter, weekCounter = weekCalculator(start)
+    msg = weekCounter+"\n"+dayCounter
+    return msg,IMG_FINAL
 
 #----------------------------------

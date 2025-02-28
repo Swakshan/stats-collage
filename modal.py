@@ -2,8 +2,7 @@ from PIL import Image,ImageDraw,ImageFont
 import requests,json
 from dataclasses import dataclass
 from io import BytesIO
-from datetime import datetime,timedelta
-import matplotlib.pyplot as plt
+from common import getEnv
 
 IMG_TEMP = "./images/template.jpg"
 IMG_FINAL = "./images/final.png"
@@ -61,4 +60,47 @@ class Item:
 
     def json(self):
         return json.dumps({"name":self.name,"scrobble":self.scrobble,"loved":self.loved})
+
+
+class Tele:
+    def __init__(self):
+        BOT_TOKEN = getEnv("TELE_BOT_TOKEN")
+        self.CHANNEL_ID = getEnv("TELE_CHNANNEL_ID")
+        self.API = 'https://api.telegram.org/bot'+BOT_TOKEN
+    
+    def __santizeText(self,txt):
+        spl_ch = ['**',  '``', '[[', ']]', '((', '))', '~', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' ]
+        for ch in spl_ch:
+            txt = txt.replace(ch,f'\\{ch}')
+        return txt
+    
+    def __sendRequest(self,slug,data,file={}):
+        api = self.API+slug
+        data['chat_id'] = self.CHANNEL_ID
+        req = requests.post(api,data=data,files=file)
+        pkjson = req.json()
+        if req.status_code==200:
+            print('TELE: sent')
+            return True
+        else:
+            print("TELE: ERROR ",str(pkjson))
+            return False
+    
+    def sendMessage(self, message):
+        msg = self.__santizeText(message)
+        print(msg)
+        cont = {
+            "text":msg,
+            "disable_web_page_preview":1,
+            "parse_mode" : "MarkdownV2"
+        }
+        
+        return self.__sendRequest('/sendMessage',cont)
+        
+    def sendImage(self,message,imagePath):
+        cont = {'caption':message}
+        file = {'photo':open(imagePath,'rb')}
+        return self.__sendRequest('/sendPhoto',cont,file)
+
+
 
