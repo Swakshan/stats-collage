@@ -75,8 +75,8 @@ def makeWeeklyCollage(start):
     
     y = 215
     offset = 385
-    BG.paste(ALBUM, (x,y)) 
-    BG.paste(ARTIST, (x,y+offset)) 
+    BG.paste(ARTIST, (x,y)) 
+    BG.paste(ALBUM, (x,y+offset))
     BG.paste(TRACK, (x,y+(offset*2)))
     
     DAILYCHART = Image.open(LASTM_IMG_DAILY_CHART).resize([1425, 550])
