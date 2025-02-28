@@ -29,7 +29,7 @@ class Data:
         return BytesIO(content)
     
     def generateImage(self):
-        fontName = "arial.ttf"
+        fontName = "./dummy/Roboto-SemiBold.ttf"
         xAxis = 35
         bytes_decoded = self.__url2Img()
         # bytes_decoded = "./images/unnamed.jpeg"

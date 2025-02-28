@@ -64,9 +64,9 @@ def makeWeeklyCollage(start):
     dayCounter, weekCounter = weekCalculator(start)
     
     draw = ImageDraw.Draw(BG)
-    font = ImageFont.truetype("arial.ttf", 80)
+    font = ImageFont.truetype("./dummy/Roboto-SemiBold.ttf", 80)
     draw.text((x, 15), weekCounter,font=font,stroke_width=18,stroke_fill='#000')
-    font = ImageFont.truetype("arial.ttf", 60)
+    font = ImageFont.truetype("./dummy/Roboto-SemiBold.ttf", 60)
     draw.text((x+1000, 30), dayCounter,font=font,stroke_width=18,stroke_fill='#000')
 
     
