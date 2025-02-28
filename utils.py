@@ -1,8 +1,8 @@
 from datetime import datetime,timedelta
 
-from PIL import Image
+from PIL import Image,ImageFont,ImageDraw
 from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,Data,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL
-from providers.lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings
+from providers.lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings,weekCalculator
 from common import buildChart
 
 #----------------------------------
@@ -55,14 +55,24 @@ def saveWeeklyCharts(start,end):
     buildChart('Hourly listen pattern',hrly.keys(), hrly.values(),'Hour','Count','#00c2c7',LASTM_IMG_HOURLY_CHART)
 
 
-def makeWeeklyCollage():
+def makeWeeklyCollage(start):
     BG = Image.open(IMG_TEMP)
+    x = 25
+    
+    dayCounter, weekCounter = weekCalculator(start)
+    
+    draw = ImageDraw.Draw(BG)
+    font = ImageFont.truetype("arial.ttf", 80)
+    draw.text((x, 15), weekCounter,font=font,stroke_width=18,stroke_fill='#000')
+    font = ImageFont.truetype("arial.ttf", 60)
+    draw.text((x+1000, 30), dayCounter,font=font,stroke_width=18,stroke_fill='#000')
+
+    
     
     ALBUM = Image.open(IMG_ALBUM) #.resize([1440, 288]) #[int(ALBUM.width*0.4),int(ALBUM.height*0.4)]
     ARTIST = Image.open(IMG_ARTIST) #.resize([1440, 288])
     TRACK = Image.open(IMG_TRACK) #.resize([1440, 288])
     
-    x = 25
     y = 215
     offset = 385
     BG.paste(ALBUM, (x,y)) 

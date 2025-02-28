@@ -5,6 +5,15 @@ from ytmusicapi import YTMusic
 from datetime import datetime,timedelta
 from pytz import timezone
 
+def weekCalculator(start):
+    s = datetime.fromtimestamp(start)
+    e = s + timedelta(days=6)
+
+    dayCounter = s.strftime("%b")+" "+s.strftime("%d")+" - "+e.strftime("%b")+" "+e.strftime("%d")
+    weekCounter = "Week #"+s.strftime("%W")
+    
+    return dayCounter, weekCounter
+
 
 def getTimestamps():
     TZ = timezone('Asia/Kolkata')
