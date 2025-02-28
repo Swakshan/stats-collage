@@ -7,7 +7,7 @@ on:
   workflow_dispatch:  # Allows manual triggering
     
 jobs:
-  manual-extract:
+  run-script:
     runs-on: ubuntu-latest
     env:
       LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
@@ -35,4 +35,4 @@ jobs:
         LASTFM_USERNAME: ${{ secrets.LASTFM_USERNAME }}
         TELE_BOT_TOKEN: ${{ secrets.TELE_BOT_TOKEN }}
         TELE_CHNANNEL_ID: ${{ secrets.TELE_CHNANNEL_ID }}    
-      run: python main.py
+      run: python main.py 1
