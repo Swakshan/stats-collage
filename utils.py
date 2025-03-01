@@ -116,7 +116,7 @@ def saveCollage(lHeader,rHeader,chart1,chart2):
 def buildWeekly():
     start,end = getWeeklyTimestamps()
     dayCounter, weekCounter = weekLabel(start)
-    msg = weekCounter+"\n"+dayCounter
+    msg = f"#Music {weekCounter}\n{dayCounter}"
     print("LOG: Building for "+dayCounter)
     
     saveTopItems(start,end)

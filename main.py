@@ -15,8 +15,7 @@ try:
         msg, img = buildMonthly()
     
     if len(msg) and len(img):
-        pass
-        # tele.sendImage(message=msg,imagePath=img)
+        tele.sendImage(message=msg,imagePath=img)
 
     
 except Exception as e:
