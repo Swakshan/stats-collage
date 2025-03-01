@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 import json
 import matplotlib.pyplot as plt
+from datetime import datetime,timedelta
+from pytz import timezone
 
 load_dotenv()
 
@@ -23,6 +25,48 @@ def readJsonFile(OUT_PATH):
     print("LOAD: "+OUT_PATH)
     return data
 
+def weekLabel(start):
+    s = datetime.fromtimestamp(start)
+    e = s + timedelta(days=6)
+
+    dayCounter = s.strftime("%b")+" "+s.strftime("%d")+" - "+e.strftime("%b")+" "+e.strftime("%d")
+    weekCounter = "Week #"+s.strftime("%W")
+    
+    return dayCounter, weekCounter
+
+def monthLabel(start,end):
+    s = datetime.fromtimestamp(start)
+    e = datetime.fromtimestamp(end)
+    
+    mName = s.strftime("%B")
+    label = s.strftime("%b")+" "+s.strftime("%d")+" - "+e.strftime("%b")+" "+e.strftime("%d")
+    
+    return mName,label
+
+
+def getMonthlyTimestamps():
+    TZ = timezone('Asia/Kolkata')
+    today = datetime.now(tz=TZ)
+
+    endDate = today - timedelta(days=today.day)
+    startDate = endDate - timedelta(endDate.day - 1)
+    
+    startTS = startDate.replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
+    endTS = endDate.replace(hour=23, minute=59, second=59, microsecond=999999).timestamp()
+
+    return int(startTS),int(endTS)
+
+
+def getWeeklyTimestamps():
+    TZ = timezone('Asia/Kolkata')
+    today = datetime.now(tz=TZ)
+    sunTimedelta = today.isoweekday()
+    endDate = today - timedelta(days=sunTimedelta)
+    startDate = endDate - timedelta(days=6)
+    
+    startTS = startDate.replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
+    endTS = endDate.replace(hour=23, minute=59, second=59, microsecond=999999).timestamp()
+    return int(startTS), int(endTS)
 
 def buildChart(title,keys,values,xlabel,ylabel,barColor,savePath):
     try:

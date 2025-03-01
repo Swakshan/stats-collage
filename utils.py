@@ -1,10 +1,10 @@
 from datetime import datetime,timedelta
 
 from PIL import Image,ImageFont,ImageDraw
-from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL
+from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL,LASTM_IMG_DAY_CHART,LASTM_IMG_WEEKLY_CHART
 from modal import Data,Tele
-from providers.lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings,weekCalculator,getTimestamps
-from common import buildChart
+from providers.lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings
+from common import buildChart,getMonthlyTimestamps,getWeeklyTimestamps,weekLabel,monthLabel
 
 
 #----------------------------------
@@ -56,18 +56,36 @@ def saveWeeklyCharts(start,end):
     buildChart('Daily listen pattern',freq.keys(), freq.values(),'Date','Count','#005582',LASTM_IMG_DAILY_CHART)
     buildChart('Hourly listen pattern',hrly.keys(), hrly.values(),'Hour','Count','#00c2c7',LASTM_IMG_HOURLY_CHART)
 
+def saveMothlyCharts(start,end):       
+    tracks = getRecentTracksTimestamp(start,end)        
+    weekly = {}
+    days = {"Mon":0,"Tue":0,"Wed":0,"Thu":0,"Fri":0,"Sat":0,"Sun":0}
 
-def makeWeeklyCollage(start):
+
+    for ts in tracks:
+        day = ts.strftime("%a")
+        days[day] = days.get(day,0) + 1
+        
+        week = ts.strftime("%W")
+        weekly[week] = weekly.get(week,0) + 1
+        
+    weekly = dict(sorted(weekly.items(), key=lambda item: item[1]))
+    buildChart('Weekly listen pattern',weekly.keys(), weekly.values(),'Week','Count','#EEDE54',LASTM_IMG_WEEKLY_CHART)
+    buildChart('Days pattern',days.keys(), days.values(),'Day','Count','#48A54C',LASTM_IMG_DAY_CHART)
+
+
+def saveCollage(lHeader,rHeader,chart1,chart2):
     BG = Image.open(IMG_TEMP)
     x = 25
     
-    dayCounter, weekCounter = weekCalculator(start)
     
     draw = ImageDraw.Draw(BG)
-    font = ImageFont.truetype("./dummy/Roboto-SemiBold.ttf", 80)
-    draw.text((x, 15), weekCounter,font=font,stroke_width=18,stroke_fill='#000')
-    font = ImageFont.truetype("./dummy/Roboto-SemiBold.ttf", 60)
-    draw.text((x+1000, 30), dayCounter,font=font,stroke_width=18,stroke_fill='#000')
+    if(len(lHeader)):
+        font = ImageFont.truetype("./dummy/Roboto-SemiBold.ttf", 80)
+        draw.text((x, 15), lHeader,font=font,stroke_width=18,stroke_fill='#000')
+    if(len(rHeader)):
+        font = ImageFont.truetype("./dummy/Roboto-SemiBold.ttf", 60)
+        draw.text((x+1000, 30), rHeader,font=font,stroke_width=18,stroke_fill='#000')
 
     
     
@@ -81,30 +99,46 @@ def makeWeeklyCollage(start):
     BG.paste(ALBUM, (x,y+offset))
     BG.paste(TRACK, (x,y+(offset*2)))
     
-    DAILYCHART = Image.open(LASTM_IMG_DAILY_CHART).resize([1425, 550])
-    HOURLYCHART = Image.open(LASTM_IMG_HOURLY_CHART).resize([1425, 550])
+    CHART1 = Image.open(chart1).resize([1425, 550])
+    CHART2 = Image.open(chart2).resize([1425, 550])
 
     y = 1300
     offset = 540
-    BG.paste(DAILYCHART, (x,y))
-    BG.paste(HOURLYCHART, (x,y+offset))
+    BG.paste(CHART1, (x,y))
+    BG.paste(CHART2, (x,y+offset))
   
     # # Displaying the image 
     BG.save(IMG_FINAL, optimize=True)
-    print("IMG: Weekly Collage saved")
+    print("IMG: Collage saved")
     # BG.show()
 
+
 def buildWeekly():
-    start,end = getTimestamps()
-    dayCounter, weekCounter = weekCalculator(start)
+    start,end = getWeeklyTimestamps()
+    dayCounter, weekCounter = weekLabel(start)
     msg = weekCounter+"\n"+dayCounter
     print("LOG: Building for "+dayCounter)
     
     saveTopItems(start,end)
     saveWeeklyCharts(start,end)
     
-    makeWeeklyCollage(start)
+    saveCollage(weekCounter,dayCounter,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART)
     
     return msg,IMG_FINAL
+
+def buildMonthly():
+    start,end = getMonthlyTimestamps()
+    mName,mDays = monthLabel(start,end)
+    
+    print("LOG: Building for "+mName)
+    
+    saveTopItems(start,end)
+    saveMothlyCharts(start,end)
+    
+    saveCollage(mName,mDays,LASTM_IMG_DAY_CHART,LASTM_IMG_WEEKLY_CHART)
+    
+    msg = f"#Music {mName}"
+    return msg,IMG_FINAL
+
 
 #----------------------------------

@@ -5,27 +5,6 @@ from ytmusicapi import YTMusic
 from datetime import datetime,timedelta
 from pytz import timezone
 
-def weekCalculator(start):
-    s = datetime.fromtimestamp(start)
-    e = s + timedelta(days=6)
-
-    dayCounter = s.strftime("%b")+" "+s.strftime("%d")+" - "+e.strftime("%b")+" "+e.strftime("%d")
-    weekCounter = "Week #"+s.strftime("%W")
-    
-    return dayCounter, weekCounter
-
-
-def getTimestamps():
-    TZ = timezone('Asia/Kolkata')
-    today = datetime.now(tz=TZ)
-    sunTimedelta = today.isoweekday()
-    endDate = today - timedelta(days=sunTimedelta)
-    startDate = endDate - timedelta(days=6)
-    
-    startTS = startDate.replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
-    endTS = endDate.replace(hour=23, minute=59, second=59, microsecond=999999).timestamp()
-    return int(startTS), int(endTS)
-
 def getYT(name,type):
     YTM = YTMusic()
     return YTM.search(query=name,filter=type)

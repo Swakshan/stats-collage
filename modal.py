@@ -12,6 +12,10 @@ IMG_ALBUM = "./images/TopAlbum.png"
 IMG_TRACK = "./images/TopTrack.png"
 LASTM_IMG_DAILY_CHART = "./images/dailyListenPattern.png"
 LASTM_IMG_HOURLY_CHART = "./images/hourlyListenPattern.png"
+LASTM_IMG_WEEKLY_CHART = "./images/weeklyListenPattern.png"
+LASTM_IMG_DAY_CHART = "./images/daysListenPattern.png"
+
+
 
 
 @dataclass
