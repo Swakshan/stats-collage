@@ -1,4 +1,4 @@
-name: LastFM Weekly Run
+name: LastFM Monthly Run
 
 on:
   schedule:
