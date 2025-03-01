@@ -96,14 +96,15 @@ def makeWeeklyCollage(start):
 
 def buildWeekly():
     start,end = getTimestamps()
+    dayCounter, weekCounter = weekCalculator(start)
+    msg = weekCounter+"\n"+dayCounter
+    print("LOG: Building for "+dayCounter)
     
     saveTopItems(start,end)
     saveWeeklyCharts(start,end)
     
     makeWeeklyCollage(start)
     
-    dayCounter, weekCounter = weekCalculator(start)
-    msg = weekCounter+"\n"+dayCounter
     return msg,IMG_FINAL
 
 #----------------------------------

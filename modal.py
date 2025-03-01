@@ -5,6 +5,7 @@ from io import BytesIO
 from common import getEnv
 
 IMG_TEMP = "./images/template.jpg"
+IMG_HEART = "./images/heart.jpg"
 IMG_FINAL = "./images/final.png"
 IMG_ARTIST = "./images/TopArtist.png"
 IMG_ALBUM = "./images/TopAlbum.png"
@@ -47,6 +48,11 @@ class Data:
             draw.text((xAxis, 580), self.artist,font=headfont,stroke_width=8,stroke_fill='#000')
         
         draw.text((xAxis, 660), f"{self.scrobble} Scrobbles",font=subfont,stroke_width=7,stroke_fill='#000')
+        
+        if(self.loved):
+            heart = Image.open(IMG_HEART).convert("RGBA").rotate(355)
+            img.paste(heart, (570,0),heart)
+
         return img
     
 @dataclass

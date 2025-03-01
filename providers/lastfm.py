@@ -155,14 +155,12 @@ def findTopRatings(start,end,limit=200):
         songData.loved = isLoved if isLoved else songData.loved
         songs[songKey] = songData
         
-        artistData:Item = artists[artistName] if artistName in artists else Item(name=artistName,scrobble=0,loved=isLoved)
+        artistData:Item = artists[artistName] if artistName in artists else Item(name=artistName,scrobble=0)
         artistData.scrobble += 1
-        artistData.loved = isLoved if isLoved else artistData.loved
         artists[artistName] = artistData
 
-        albumData:Item = albums[albumName] if albumName in albums else Item(name=albumName+"||"+artistName,scrobble=0,loved=isLoved)
+        albumData:Item = albums[albumName] if albumName in albums else Item(name=albumName+"||"+artistName,scrobble=0)
         albumData.scrobble += 1
-        albumData.loved = isLoved if isLoved else albumData.loved
         albums[albumName] = albumData
     
     topSongs = sorted(list(songs.values()), key=lambda x: x.scrobble,reverse=True)[:5]
