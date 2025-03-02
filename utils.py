@@ -57,8 +57,9 @@ def saveWeeklyCharts(start,end):
     buildChart('Hourly listen pattern',hrly.keys(), hrly.values(),'Hour','Count','#00c2c7',LASTM_IMG_HOURLY_CHART)
 
 def saveMothlyCharts(start,end):       
-    tracks = getRecentTracksTimestamp(start,end)        
+    tracks = getRecentTracksTimestamp(start,end)
     weekly = {}
+    days = {}
     days = {"Mon":0,"Tue":0,"Wed":0,"Thu":0,"Fri":0,"Sat":0,"Sun":0}
 
 
@@ -69,7 +70,6 @@ def saveMothlyCharts(start,end):
         week = ts.strftime("%W")
         weekly[week] = weekly.get(week,0) + 1
         
-    weekly = dict(sorted(weekly.items(), key=lambda item: item[1]))
     buildChart('Weekly listen pattern',weekly.keys(), weekly.values(),'Week','Count','#EEDE54',LASTM_IMG_WEEKLY_CHART)
     buildChart('Days pattern',days.keys(), days.values(),'Day','Count','#48A54C',LASTM_IMG_DAY_CHART)
 

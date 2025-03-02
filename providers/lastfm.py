@@ -111,7 +111,8 @@ def getRecentTracksTimestamp(start,end,limit=200):
         date_str = track['date']['uts']
         
         dt.append(datetime.fromtimestamp(int(date_str),tz=TZ))
-    return dt
+    
+    return reversed(dt)
 
 def findTopRatings(start,end,limit=200):
     tracks = getRecentTracks(start,end,limit)
