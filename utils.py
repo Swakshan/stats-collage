@@ -99,13 +99,13 @@ def saveCollage(lHeader,rHeader,chart1,chart2):
     BG.paste(ALBUM, (x,y+offset))
     BG.paste(TRACK, (x,y+(offset*2)))
     
-    CHART1 = Image.open(chart1).resize([1425, 550])
-    CHART2 = Image.open(chart2).resize([1425, 550])
+    CHART1 = Image.open(chart1).resize([1465, 550])
+    CHART2 = Image.open(chart2).resize([1465, 550])
 
     y = 1300
     offset = 540
-    BG.paste(CHART1, (x,y))
-    BG.paste(CHART2, (x,y+offset))
+    BG.paste(CHART1, (x-30,y))
+    BG.paste(CHART2, (x-30,y+offset))
   
     # # Displaying the image 
     BG.save(IMG_FINAL, optimize=True)
