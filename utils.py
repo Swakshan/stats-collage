@@ -1,7 +1,7 @@
 from datetime import datetime,timedelta
 
 from PIL import Image,ImageFont,ImageDraw
-from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL,LASTM_IMG_DAY_CHART,LASTM_IMG_WEEKLY_CHART
+from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL,LASTM_IMG_DAY_CHART,LASTM_IMG_WEEKLY_CHART,FONT_ROBOTO_SEMI_BOLD
 from modal import Data,Tele
 from providers.lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings
 from common import buildChart,getMonthlyTimestamps,getWeeklyTimestamps,weekLabel,monthLabel
@@ -81,10 +81,10 @@ def saveCollage(lHeader,rHeader,chart1,chart2):
     
     draw = ImageDraw.Draw(BG)
     if(len(lHeader)):
-        font = ImageFont.truetype("./dummy/Roboto-SemiBold.ttf", 80)
+        font = ImageFont.truetype(FONT_ROBOTO_SEMI_BOLD, 80)
         draw.text((x, 15), lHeader,font=font,stroke_width=18,stroke_fill='#000')
     if(len(rHeader)):
-        font = ImageFont.truetype("./dummy/Roboto-SemiBold.ttf", 60)
+        font = ImageFont.truetype(FONT_ROBOTO_SEMI_BOLD, 60)
         draw.text((x+1000, 30), rHeader,font=font,stroke_width=18,stroke_fill='#000')
 
     

@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from io import BytesIO
 from common import getEnv
 
+CACHE_FOLDER = "./cache"
+FONT_ROBOTO_SEMI_BOLD = CACHE_FOLDER+"/Roboto-SemiBold.ttf"
 IMG_TEMP = "./images/template.jpg"
 IMG_HEART = "./images/heart.jpg"
 IMG_FINAL = "./images/final.png"
@@ -34,7 +36,6 @@ class Data:
         return BytesIO(content)
     
     def generateImage(self):
-        fontName = "./dummy/Roboto-SemiBold.ttf"
         xAxis = 35
         bytes_decoded = self.__url2Img()
         # bytes_decoded = "./images/unnamed.jpeg"
@@ -42,8 +43,8 @@ class Data:
         img = Image.open(bytes_decoded)
         draw = ImageDraw.Draw(img)
         
-        headfont = ImageFont.truetype(fontName, 70)
-        subfont = ImageFont.truetype(fontName, 50)
+        headfont = ImageFont.truetype(FONT_ROBOTO_SEMI_BOLD, 70)
+        subfont = ImageFont.truetype(FONT_ROBOTO_SEMI_BOLD, 50)
         
         if len(self.name): #if both title and artist are not empty
             draw.text((xAxis, 520), self.name,font=headfont,stroke_width=8,stroke_fill='#000')

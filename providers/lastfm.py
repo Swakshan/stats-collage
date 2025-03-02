@@ -1,5 +1,5 @@
 from common import getEnv,readJsonFile,writeJsonFile
-from modal import Data,Item
+from modal import Data,Item,CACHE_FOLDER
 import requests,os
 from ytmusicapi import YTMusic
 from datetime import datetime,timedelta
@@ -82,7 +82,7 @@ def getTopAlbums(start,end,limit=5):
     return tracks
 
 def getRecentTracks(start,end,limit=200):
-    cache_file = "./dummy/getrecenttracks.json"
+    cache_file = CACHE_FOLDER+"/getrecenttracks.json"
     if os.path.exists(cache_file):
         return readJsonFile(cache_file)
     totalPages = 999
