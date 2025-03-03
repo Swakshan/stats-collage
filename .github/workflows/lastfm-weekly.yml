@@ -2,7 +2,7 @@ name: LastFM Weekly Run
 
 on:
   schedule:
-    # Runs At 14:00UTC (07:30PM) on Monday.
+    # Runs At 14:00UTC (07:30PM IST) on Monday.
     - cron: '0 14 * * 1'
   workflow_dispatch:  # Allows manual triggering
     

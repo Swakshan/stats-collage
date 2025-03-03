@@ -2,7 +2,7 @@ name: LastFM Monthly Run
 
 on:
   schedule:
-    # Runs At 13:30UTC on every 1st day of the month.
+    # Runs At 14:30UTC (08:00PM IST) on every 1st day of the month.
     - cron: '30 14 1 * *'
   workflow_dispatch:  # Allows manual triggering
     
