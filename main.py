@@ -1,5 +1,5 @@
 import sys
-from utils import buildWeekly,buildMonthly
+from utils.lastfm import buildWeekly,buildMonthly
 from modal import Tele
 
 CH = int(sys.argv[1])

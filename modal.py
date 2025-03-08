@@ -3,25 +3,37 @@ import requests,json
 from dataclasses import dataclass
 from io import BytesIO
 from common import getEnv
+from enum import Enum
+from datetime import datetime
 
 CACHE_FOLDER = "./cache"
+IMGS_FOLDER = "./images"
 FONT_ROBOTO_SEMI_BOLD = CACHE_FOLDER+"/Roboto-SemiBold.ttf"
-IMG_TEMP = "./images/template.jpg"
-IMG_HEART = "./images/heart.jpg"
-IMG_FINAL = "./images/final.png"
-IMG_ARTIST = "./images/TopArtist.png"
-IMG_ALBUM = "./images/TopAlbum.png"
-IMG_TRACK = "./images/TopTrack.png"
-LASTM_IMG_DAILY_CHART = "./images/dailyListenPattern.png"
-LASTM_IMG_HOURLY_CHART = "./images/hourlyListenPattern.png"
-LASTM_IMG_WEEKLY_CHART = "./images/weeklyListenPattern.png"
-LASTM_IMG_DAY_CHART = "./images/daysListenPattern.png"
+IMG_TEMP = IMGS_FOLDER+"/template.jpg"
+IMG_HEART = IMGS_FOLDER+"/heart.jpg"
+IMG_FINAL = IMGS_FOLDER+"/final.png"
+IMG_ARTIST = IMGS_FOLDER+"/TopArtist.png"
+IMG_ALBUM = IMGS_FOLDER+"/TopAlbum.png"
+IMG_TRACK = IMGS_FOLDER+"/TopTrack.png"
+LASTM_IMG_DAILY_CHART = IMGS_FOLDER+"/dailyListenPattern.png"
+LASTM_IMG_HOURLY_CHART = IMGS_FOLDER+"/hourlyListenPattern.png"
+LASTM_IMG_WEEKLY_CHART = IMGS_FOLDER+"/weeklyListenPattern.png"
+LASTM_IMG_DAY_CHART = IMGS_FOLDER+"/daysListenPattern.png"
+
+TRAKT_WEEKLY_CHART = IMGS_FOLDER+"/weekly{type}Pattern.png"
+TRAKT_DAY_CHART = IMGS_FOLDER+"/days{type}Pattern.png"
 
 
+
+class MEDIA(Enum):
+    MUSIC = "music"
+    ANIME = "anime"
+    MOVIE = "movies"
+    SERIES = "shows"
 
 
 @dataclass
-class Data:
+class MusicData:
     name: str
     artist: str
     imageUrl: str
@@ -61,16 +73,41 @@ class Data:
         return img
     
 @dataclass
-class Item:
+class MusicItem:
     name:str
     scrobble:int = 0
     loved:bool = False
     
-    def __str__(self):
+    def __repr__(self):
         return f"{self.name} - {self.scrobble} - {'Loved' if self.loved else 'Not Loved'}"
 
     def json(self):
         return json.dumps({"name":self.name,"scrobble":self.scrobble,"loved":self.loved})
+
+@dataclass
+class MovieData:
+    imdb:str
+    title:str
+    watched_at:datetime
+    release_year:int
+    
+    def __repr__(self):
+        return f"{self.imdb} - {self.title} - {self.watched_at} - {self.release_year}"
+    
+@dataclass
+class SeriesData:
+    series_imdb:str
+    series_name:str
+    
+    season_number:int
+    episode_imdb:str
+    episode_name:str
+    episode_number:int
+    watched_at:datetime
+    release_year:int
+    
+    def __repr__(self):
+        return f"{self.series_imdb} - {self.series_name} - {self.season_number}\n{self.episode_imdb} - {self.episode_name} - {self.episode_number}\n{self.watched_at} - {self.release_year}"
 
 
 class Tele:

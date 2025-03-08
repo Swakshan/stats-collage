@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import json
 import matplotlib.pyplot as plt
-from datetime import datetime,timedelta
+from datetime import datetime,timedelta,timezone as tz
 from pytz import timezone
 
 load_dotenv()
@@ -68,6 +68,13 @@ def getWeeklyTimestamps():
     endTS = endDate.replace(hour=23, minute=59, second=59, microsecond=999999).timestamp()
     return int(startTS), int(endTS)
 
+def getTraktMonthlyTimestamps():
+    s,e = getMonthlyTimestamps()
+    start = datetime.fromtimestamp(s, tz=tz.utc).isoformat()
+    end = datetime.fromtimestamp(e, tz=tz.utc).isoformat()
+    return start,end
+    
+
 def buildChart(title,keys,values,xlabel,ylabel,barColor,savePath):
     try:
         fig, CHART = plt.subplots(figsize=(12, 4), facecolor='black')
@@ -100,7 +107,7 @@ def buildChart(title,keys,values,xlabel,ylabel,barColor,savePath):
         # Add Data Labels
         for bar in bars:
             height = bar.get_height()
-            CHART.text(bar.get_x() + bar.get_width() / 2, height + 0.5, f'{height}', 
+            CHART.text(bar.get_x() + bar.get_width() / 2, height + 0.1, f'{height}', 
                     ha='center', va='bottom', fontsize=17, fontweight='bold', color='white')
         #fig.set_facecolor("black")
         plt.tight_layout()

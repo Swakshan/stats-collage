@@ -2,12 +2,10 @@ from datetime import datetime,timedelta
 
 from PIL import Image,ImageFont,ImageDraw
 from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL,LASTM_IMG_DAY_CHART,LASTM_IMG_WEEKLY_CHART,FONT_ROBOTO_SEMI_BOLD
-from modal import Data,Tele
+from modal import MusicData
 from providers.lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings
 from common import buildChart,getMonthlyTimestamps,getWeeklyTimestamps,weekLabel,monthLabel
 
-
-#----------------------------------
 # LASTFM
 def combineImages(items):
     lenItems = len(items)
@@ -15,7 +13,7 @@ def combineImages(items):
     combineImage = Image.new('RGB',(w,h))
 
     for i in range(lenItems):
-        item:Data = items[i]
+        item:MusicData = items[i]
         img:Image = item.generateImage()
         combineImage.paste(img,(i*h,0))
         
@@ -139,6 +137,3 @@ def buildMonthly():
     
     msg = f"#Music {mName}"
     return msg,IMG_FINAL
-
-
-#----------------------------------

@@ -1,5 +1,5 @@
 from common import getEnv,readJsonFile,writeJsonFile
-from modal import Data,Item,CACHE_FOLDER
+from modal import MusicData,MusicItem,CACHE_FOLDER
 import requests,os
 from ytmusicapi import YTMusic
 from datetime import datetime,timedelta
@@ -46,7 +46,7 @@ def getTopTracks(start,end,limit=5):
         scrobble = track['playcount']
         imageUrl = getYTImage(title,"songs")
         
-        data = Data(title,artist,imageUrl,scrobble)
+        data = MusicData(title,artist,imageUrl,scrobble)
         tracks.append(data)
     return tracks
 
@@ -62,7 +62,7 @@ def getTopArtists(start,end,limit=5):
         scrobble = track['playcount']
         imageUrl = getYTImage(artist,"artists")
         
-        data = Data(title,artist,imageUrl,scrobble)
+        data = MusicData(title,artist,imageUrl,scrobble)
         tracks.append(data)
     return tracks
 
@@ -77,7 +77,7 @@ def getTopAlbums(start,end,limit=5):
         scrobble = track['playcount']
         imageUrl = getYTImage(f"{artist} - {title}","albums")
         
-        data = Data(title,artist,imageUrl,scrobble)
+        data = MusicData(title,artist,imageUrl,scrobble)
         tracks.append(data)
     return tracks
 
@@ -130,16 +130,16 @@ def findTopRatings(start,end,limit=200):
         
         songKey  = f"{songName}||{artistName}||{albumName}"
         
-        songData:Item = songs[songKey] if songKey in songs else Item(name=songKey,scrobble=0,loved=isLoved)
+        songData:MusicItem = songs[songKey] if songKey in songs else MusicItem(name=songKey,scrobble=0,loved=isLoved)
         songData.scrobble += 1
         songData.loved = isLoved if isLoved else songData.loved
         songs[songKey] = songData
         
-        artistData:Item = artists[artistName] if artistName in artists else Item(name=artistName,scrobble=0)
+        artistData:MusicItem = artists[artistName] if artistName in artists else MusicItem(name=artistName,scrobble=0)
         artistData.scrobble += 1
         artists[artistName] = artistData
 
-        albumData:Item = albums[albumName] if albumName in albums else Item(name=albumName+"||"+artistName,scrobble=0)
+        albumData:MusicItem = albums[albumName] if albumName in albums else MusicItem(name=albumName+"||"+artistName,scrobble=0)
         albumData.scrobble += 1
         albums[albumName] = albumData
     
@@ -161,7 +161,7 @@ def getTopTracks(tracks):
 
         imageUrl = getYTImage(f"{title} - {artist}","songs")
         
-        data:Data = Data(title,artist,imageUrl,scrobble,loved)
+        data:MusicData = MusicData(title,artist,imageUrl,scrobble,loved)
         whole.append(data)
     return whole
 
@@ -175,7 +175,7 @@ def getTopArtists(artists):
 
         imageUrl = getYTImage(artist,"artists")
         
-        data:Data = Data(title,artist,imageUrl,scrobble,loved)
+        data:MusicData = MusicData(title,artist,imageUrl,scrobble,loved)
         whole.append(data)
     return whole
 
@@ -190,6 +190,6 @@ def getTopAlbums(albums):
 
         imageUrl,artist = getYTImageNArtist(f"{title} - {artist}","albums")
         
-        data:Data = Data(title,artist,imageUrl,scrobble,loved)
+        data:MusicData = MusicData(title,artist,imageUrl,scrobble,loved)
         whole.append(data)
     return whole
