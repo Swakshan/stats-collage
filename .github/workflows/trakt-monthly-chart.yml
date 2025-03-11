@@ -1,0 +1,37 @@
+name: Trakt Monthly Chart Run
+
+on:
+  schedule:
+    # Runs At 15:00UTC (08:30PM IST) on every 1st day of the month.
+    - cron: '00 15 1 * *'
+  workflow_dispatch:  # Allows manual triggering
+    
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set timezone
+      uses: szenius/set-timezone@v2.0
+      with:
+        timezoneLinux: "Asia/Kolkata"
+        
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run script
+      env:
+        TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
+        TRAKT_USERNAME: ${{ secrets.TRAKT_USERNAME }}
+        TELE_BOT_TOKEN: ${{ secrets.TELE_BOT_TOKEN }}
+        TELE_CHNANNEL_ID: ${{ secrets.TELE_CHNANNEL_ID }}    
+      run: python main.py 3

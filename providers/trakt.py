@@ -49,8 +49,8 @@ def getTraktHistory(type:MEDIA,start:str,end:str,limit:int):
 
 def getTrackData(start:str,end:str,limit=25):
     movies = getTraktHistory(MEDIA.MOVIE,start,end,limit)
+    movies = reversed(movies)
     movieList = []
-    
     for movie in movies:
         watchedAt = formatWatchedAt(movie['watched_at'])
         movieData = movie['movie']
@@ -62,6 +62,7 @@ def getTrackData(start:str,end:str,limit=25):
         movieList.append(md)
 
     shows = getTraktHistory(MEDIA.SERIES,start,end,limit)
+    shows = reversed(shows)
     showList = []
     for show in shows:
         showData = show['show']
@@ -78,7 +79,7 @@ def getTrackData(start:str,end:str,limit=25):
         
         sd = SeriesData(series_imdb,series_name,season_number,episode_imdb,episode_name,episode_number,watched_at,year)
         showList.append(sd)
-    return reversed(movieList),reversed(showList)
+    return movieList,showList
 
 
 
