@@ -1,6 +1,6 @@
 from providers.trakt import getTrackData
 from modal import MEDIA
-from modal import TRAKT_WEEKLY_CHART,TRAKT_DAY_CHART,FONT_ROBOTO_SEMI_BOLD,IMG_FINAL
+from modal import TRAKT_WEEKLY_CHART,TRAKT_DAY_CHART,FONT_ROBOTO_SEMI_BOLD,IMG_FINAL,OUT_IMG_W,OUT_IMG_H
 from common import buildChart,monthLabel,getEnv,getTraktMonthlyTimestamps,getMonthlyTimestamps
 from PIL import Image,ImageDraw,ImageFont
 
@@ -31,8 +31,8 @@ def buildMoviesNseriesCharts(start,end):
     
 
 def buildCollage(mName,mDays,movieCount,seriesCount):
-    w=1080
-    h=1920
+    w=OUT_IMG_W
+    h=OUT_IMG_H
     movie = MEDIA.MOVIE.value
     series = MEDIA.SERIES.value
     

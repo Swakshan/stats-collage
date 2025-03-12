@@ -6,6 +6,9 @@ from common import getEnv
 from enum import Enum
 from datetime import datetime
 
+
+OUT_IMG_W=1080
+OUT_IMG_H=1920
 CACHE_FOLDER = "./cache"
 IMGS_FOLDER = "./images"
 FONT_ROBOTO_SEMI_BOLD = CACHE_FOLDER+"/Roboto-SemiBold.ttf"

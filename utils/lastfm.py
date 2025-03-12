@@ -1,7 +1,7 @@
 from datetime import datetime,timedelta
 
 from PIL import Image,ImageFont,ImageDraw
-from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL,LASTM_IMG_DAY_CHART,LASTM_IMG_WEEKLY_CHART,FONT_ROBOTO_SEMI_BOLD
+from modal import IMG_TRACK,IMG_ARTIST,IMG_ALBUM,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,IMG_TEMP,IMG_FINAL,LASTM_IMG_DAY_CHART,LASTM_IMG_WEEKLY_CHART,FONT_ROBOTO_SEMI_BOLD,OUT_IMG_W,OUT_IMG_H
 from modal import MusicData
 from providers.lastfm import getRecentTracksTimestamp,getTopAlbums,getTopArtists,getTopTracks,findTopRatings
 from common import buildChart,getMonthlyTimestamps,getWeeklyTimestamps,weekLabel,monthLabel
@@ -104,7 +104,8 @@ def saveCollage(lHeader,rHeader,chart1,chart2):
     offset = 540
     BG.paste(CHART1, (x-30,y))
     BG.paste(CHART2, (x-30,y+offset))
-  
+    
+    BG = BG.resize((OUT_IMG_W,OUT_IMG_H))
     # # Displaying the image 
     BG.save(IMG_FINAL, optimize=True)
     print("IMG: Collage saved")
