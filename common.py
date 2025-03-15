@@ -26,11 +26,12 @@ def readJsonFile(OUT_PATH):
     return data
 
 def weekLabel(start):
-    s = datetime.fromtimestamp(start)
+    s = datetime.fromtimestamp(start) -  timedelta(days=61)
     e = s + timedelta(days=6)
+    weekNum = int(s.strftime("%U"))+1
 
     dayCounter = s.strftime("%b")+" "+s.strftime("%d")+" - "+e.strftime("%b")+" "+e.strftime("%d")
-    weekCounter = "Week #"+s.strftime("%W")
+    weekCounter = f"Week #{weekNum:02}" 
     
     return dayCounter, weekCounter
 
