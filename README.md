@@ -4,18 +4,24 @@
 Creates a collage, on weekly/monthly bases, of your stats from sources like:
 
 * [LastFM](https://www.last.fm/) - Music
+* [Trakt](https://trakt.tv/) - Movies & Series
 
 and sends it to your telegram channel
 
 ## 📸 Final output
 <details>
     <summary>LastFM - Weekly</summary>
-    <img src="./images/doc/lastFM_weekly.jpg" alt="lastfm-weekly" width="370.75" height="593.75"/>
+    <img src="./images/doc/lastFM_weekly.jpg" alt="lastfm-weekly.jpg" width="370.75" height="593.75"/>
 </details>
 
 <details>
     <summary>LastFM - Monthly</summary>
-    <img src="./images/doc/lastFM_monthly.jpg" alt="lastfm-weekly" width="370.75" height="593.75"/>
+    <img src="./images/doc/lastFM_monthly.jpg" alt="lastfm-monthly.jpg" width="370.75" height="593.75"/>
+</details>
+
+<details>
+    <summary>Trakt - Monthly - Chart</summary>
+    <img src="./images/doc/trakt_movies_chart.jpg" alt="trakt-monthly-chart.jpg" width="370.75" height="593.75"/>
 </details>
 
 ## 🔗 Stats profile
