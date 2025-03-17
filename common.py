@@ -26,7 +26,7 @@ def readJsonFile(OUT_PATH):
     return data
 
 def weekLabel(start):
-    s = datetime.fromtimestamp(start) -  timedelta(days=61)
+    s = datetime.fromtimestamp(start)
     e = s + timedelta(days=6)
     weekNum = int(s.strftime("%U"))+1
 
