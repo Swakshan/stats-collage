@@ -147,7 +147,10 @@ def findTopRatings(start,end,limit=200):
     topArtists = sorted(list(artists.values()), key=lambda x: x.scrobble,reverse=True)[:5]
     topAlbums = sorted(list(albums.values()), key=lambda x: x.scrobble,reverse=True)[:5]
     
-    return topSongs,topArtists,topAlbums
+    tops = [topArtists,topAlbums,topSongs]
+    counts = [f"({len(artists)})",f"({len(albums)})",f"({len(songs)})"]
+    
+    return tops,counts
 
 def getTopTracks(tracks):
     whole = []

@@ -22,7 +22,9 @@ def combineImages(items):
 
 
 def saveTopItems(start,end):
-    topTracks,topArtists,topAlbums = findTopRatings(start,end)
+    tops,counts = findTopRatings(start,end)
+    
+    topArtists,topAlbums,topTracks = tops[0],tops[1],tops[2]
     
     combineImages(getTopArtists(topArtists)).save(IMG_ARTIST)
     print("IMG: Artists saved")
@@ -32,6 +34,8 @@ def saveTopItems(start,end):
     
     combineImages(getTopTracks(topTracks)).save(IMG_TRACK)
     print("IMG: Tracks saved")
+    
+    return counts
         
 def saveWeeklyCharts(start,end):       
     tracks = getRecentTracksTimestamp(start,end)        
@@ -72,7 +76,7 @@ def saveMothlyCharts(start,end):
     buildChart('Days pattern',days.keys(), days.values(),'Day','Count','#48A54C',LASTM_IMG_DAY_CHART)
 
 
-def saveCollage(lHeader,rHeader,chart1,chart2):
+def saveCollage(lHeader,rHeader,chart1,chart2,counts):
     BG = Image.open(IMG_TEMP)
     x = 25
     
@@ -93,9 +97,16 @@ def saveCollage(lHeader,rHeader,chart1,chart2):
     
     y = 215
     offset = 385
+    font = ImageFont.truetype(FONT_ROBOTO_SEMI_BOLD, 50)
     BG.paste(ARTIST, (x,y)) 
     BG.paste(ALBUM, (x,y+offset))
     BG.paste(TRACK, (x,y+(offset*2)))
+    fontX = x+360
+    fontY = y-76
+    draw.text((fontX, fontY), counts[0],font=font,stroke_width=18,stroke_fill='#000')
+    draw.text((fontX, fontY+offset), counts[1],font=font,stroke_width=18,stroke_fill='#000')
+    draw.text((fontX, fontY+(offset*2)), counts[2],font=font,stroke_width=18,stroke_fill='#000')
+    
     
     CHART1 = Image.open(chart1).resize([1465, 550])
     CHART2 = Image.open(chart2).resize([1465, 550])
@@ -115,14 +126,14 @@ def saveCollage(lHeader,rHeader,chart1,chart2):
 def buildWeekly():
     start,end = getWeeklyTimestamps()
     dayCounter, weekCounter = weekLabel(start)
-    msg = f"#Music {weekCounter}\n{dayCounter}"
     print("LOG: Building for "+dayCounter)
     
-    saveTopItems(start,end)
+    counts = saveTopItems(start,end)
     saveWeeklyCharts(start,end)
     
-    saveCollage(weekCounter,dayCounter,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART)
+    saveCollage(weekCounter,dayCounter,LASTM_IMG_DAILY_CHART,LASTM_IMG_HOURLY_CHART,counts)
     
+    msg = f"#Music {weekCounter}\n{dayCounter}"
     return msg,IMG_FINAL
 
 def buildMonthly():
@@ -131,10 +142,10 @@ def buildMonthly():
     
     print("LOG: Building for "+mName)
     
-    saveTopItems(start,end)
+    counts = saveTopItems(start,end)
     saveMothlyCharts(start,end)
     
-    saveCollage(mName,mDays,LASTM_IMG_DAY_CHART,LASTM_IMG_WEEKLY_CHART)
+    saveCollage(mName,mDays,LASTM_IMG_DAY_CHART,LASTM_IMG_WEEKLY_CHART,counts)
     
     msg = f"#Music {mName}"
     return msg,IMG_FINAL
