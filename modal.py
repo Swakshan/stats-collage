@@ -33,6 +33,7 @@ class MEDIA(Enum):
     ANIME = "anime"
     MOVIE = "movies"
     SERIES = "shows"
+    EPISODE = "episodes"
 
 
 @dataclass

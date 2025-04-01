@@ -26,15 +26,15 @@ def makeChart(tracks,type):
 def buildMoviesNseriesCharts(start,end):
     movieList, showList = getTrackData(start,end,200)
     makeChart(movieList,MEDIA.MOVIE)
-    makeChart(showList,MEDIA.SERIES)
+    makeChart(showList,MEDIA.EPISODE)
     return len(movieList),len(showList)
     
 
-def buildCollage(mName,mDays,movieCount,seriesCount):
+def buildCollage(mName,mDays,movieCount,episodeCount):
     w=OUT_IMG_W
     h=OUT_IMG_H
     movie = MEDIA.MOVIE.value
-    series = MEDIA.SERIES.value
+    episode = MEDIA.EPISODE.value
     
     BG = Image.new('RGB', (w,h),'black')
     draw = ImageDraw.Draw(BG)
@@ -48,20 +48,20 @@ def buildCollage(mName,mDays,movieCount,seriesCount):
     
     font = ImageFont.truetype(FONT_ROBOTO_SEMI_BOLD, 40)
     draw.text((x, 160), f"Movie count: {movieCount}",font=font,stroke_width=10,stroke_fill='#000')
-    draw.text((x+w-450, 160), f"Series count: {seriesCount}",font=font,stroke_width=10,stroke_fill='#000')
+    draw.text((x+w-450, 160), f"Episode count: {episodeCount}",font=font,stroke_width=10,stroke_fill='#000')
     
     chart_h = 400
     chart_w = w-150
     MOVIE_WEEKLY_CHART = Image.open(TRAKT_WEEKLY_CHART.format(type=movie)).resize((chart_w,chart_h))
     MOVIE_DAY_CHART = Image.open(TRAKT_DAY_CHART.format(type=movie)).resize((chart_w,chart_h))
-    SEREIS_WEEKLY_CHART = Image.open(TRAKT_WEEKLY_CHART.format(type=series)).resize((chart_w,chart_h))
-    SEREIS_DAY_CHART = Image.open(TRAKT_DAY_CHART.format(type=series)).resize((chart_w,chart_h))
+    EPISODE_WEEKLY_CHART = Image.open(TRAKT_WEEKLY_CHART.format(type=episode)).resize((chart_w,chart_h))
+    EPISODE_DAY_CHART = Image.open(TRAKT_DAY_CHART.format(type=episode)).resize((chart_w,chart_h))
     y = 250
     # x = x+40
     BG.paste(MOVIE_WEEKLY_CHART, (x,y))
     BG.paste(MOVIE_DAY_CHART, (x,y+chart_h))
-    BG.paste(SEREIS_WEEKLY_CHART, (x,y+(chart_h*2)))
-    BG.paste(SEREIS_DAY_CHART, (x,y+(chart_h*3)))
+    BG.paste(EPISODE_WEEKLY_CHART, (x,y+(chart_h*2)))
+    BG.paste(EPISODE_DAY_CHART, (x,y+(chart_h*3)))
     
     BG.save(IMG_FINAL, optimize=True)
     print("IMG: Collage saved")
@@ -75,7 +75,7 @@ def buildMonthly():
     print("LOG: Building for "+mName)
     
     s,e = getTraktMonthlyTimestamps()
-    movieCount,seriesCount = buildMoviesNseriesCharts(s,e)
-    buildCollage(mName,mDays,movieCount,seriesCount)
+    movieCount,episodeCount = buildMoviesNseriesCharts(s,e)
+    buildCollage(mName,mDays,movieCount,episodeCount)
     msg = f"#Trakt {mName}"   
     return msg,IMG_FINAL
