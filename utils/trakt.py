@@ -5,7 +5,6 @@ from common import buildChart,monthLabel,getEnv,getTraktMonthlyTimestamps,getMon
 from PIL import Image,ImageDraw,ImageFont
 
 def makeChart(tracks,type):
-    # Fetch data from Trakt API
     weekly = {}
     days = {}
     days = {"Mon":0,"Tue":0,"Wed":0,"Thu":0,"Fri":0,"Sat":0,"Sun":0}
@@ -24,13 +23,13 @@ def makeChart(tracks,type):
 
 
 def buildMoviesNseriesCharts(start,end):
-    movieList, showList = getTrackData(start,end,200)
+    movieList, showList,episodeList = getTrackData(start,end,200)
     makeChart(movieList,MEDIA.MOVIE)
-    makeChart(showList,MEDIA.EPISODE)
-    return len(movieList),len(showList)
+    makeChart(episodeList,MEDIA.EPISODE)
+    return len(movieList),len(showList),len(episodeList)
     
 
-def buildCollage(mName,mDays,movieCount,episodeCount):
+def buildCollage(mName,mDays,movieCount,showCount,episodeCount):
     w=OUT_IMG_W
     h=OUT_IMG_H
     movie = MEDIA.MOVIE.value
@@ -47,8 +46,9 @@ def buildCollage(mName,mDays,movieCount,episodeCount):
     draw.text((x+w-465, 60), mDays,font=font,stroke_width=18,stroke_fill='#000')
     
     font = ImageFont.truetype(FONT_ROBOTO_SEMI_BOLD, 40)
-    draw.text((x, 160), f"Movie count: {movieCount}",font=font,stroke_width=10,stroke_fill='#000')
-    draw.text((x+w-450, 160), f"Episode count: {episodeCount}",font=font,stroke_width=10,stroke_fill='#000')
+    draw.text((x, 160), f"Movies count: {movieCount}",font=font,stroke_width=10,stroke_fill='#000')
+    draw.text((x+w-450, 140), f"Shows count: {showCount}",font=font,stroke_width=10,stroke_fill='#000')
+    draw.text((x+w-450, 180), f"Episodes count: {episodeCount}",font=font,stroke_width=10,stroke_fill='#000')
     
     chart_h = 400
     chart_w = w-150
@@ -75,7 +75,8 @@ def buildMonthly():
     print("LOG: Building for "+mName)
     
     s,e = getTraktMonthlyTimestamps()
-    movieCount,episodeCount = buildMoviesNseriesCharts(s,e)
-    buildCollage(mName,mDays,movieCount,episodeCount)
+    movieCount,showCount,episodeCount = buildMoviesNseriesCharts(s,e)
+
+    buildCollage(mName,mDays,movieCount,showCount,episodeCount)
     msg = f"#Trakt {mName}"   
     return msg,IMG_FINAL
