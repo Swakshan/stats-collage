@@ -15,7 +15,7 @@ def makeChart(tracks,type):
         day = ts.strftime("%a")
         days[day] = days.get(day,0) + 1
         
-        week = ts.strftime("%W") + 1
+        week = int(ts.strftime("%W")) + 1
         weekly[week] = weekly.get(week,0) + 1
         
     buildChart(f'Weekly {type.value} watch pattern',weekly.keys(), weekly.values(),'Week','Count','#df2935',TRAKT_WEEKLY_CHART.format(type=type.value))

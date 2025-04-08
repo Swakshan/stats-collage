@@ -49,7 +49,7 @@ def monthLabel(start,end):
     s = datetime.fromtimestamp(start)
     e = datetime.fromtimestamp(end)
     
-    mName = s.strftime("%B")
+    mName = s.strftime("%B")+" "+s.strftime("%Y")
     label = s.strftime("%b")+" "+s.strftime("%d")+" - "+e.strftime("%b")+" "+e.strftime("%d")
     
     return mName,label
