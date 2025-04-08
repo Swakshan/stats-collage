@@ -1,6 +1,8 @@
 import sys
 import utils.lastfm as lf
 import utils.trakt as trk
+from common import get_exception
+
 
 from modal import Tele
 
@@ -17,12 +19,14 @@ try:
         msg, img = lf.buildMonthly()
     elif CH == 3:
         msg, img = trk.buildMonthly()
-        
+
     if len(msg) and len(img):
         tele.sendImage(message=msg,imagePath=img)
 
     
 except Exception as e:
-    tele.sendMessage("ERROR: "+str(e))
+    err = get_exception()
+    print(err)
+    tele.sendMessage("ERROR: "+err)
     
 

@@ -4,6 +4,8 @@ import json
 import matplotlib.pyplot as plt
 from datetime import datetime,timedelta,timezone as tz
 from pytz import timezone
+from sys import exc_info
+from traceback import format_exception
 
 load_dotenv()
 
@@ -24,6 +26,14 @@ def readJsonFile(OUT_PATH):
     f.close()
     print("LOAD: "+OUT_PATH)
     return data
+
+
+def get_exception():
+    etype, value, tb = exc_info()
+    info, error = format_exception(etype, value, tb)[-2:]
+    rd = f'Exception in: {info}: {error}'
+    return rd
+
 
 def weekLabel(start):
     s = datetime.fromtimestamp(start)

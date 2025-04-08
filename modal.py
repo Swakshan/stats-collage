@@ -121,7 +121,7 @@ class Tele:
         self.API = 'https://api.telegram.org/bot'+BOT_TOKEN
     
     def __santizeText(self,txt):
-        spl_ch = ['**',  '``', '[[', ']]', '((', '))', '~', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' ]
+        spl_ch = ['*',  '`', '[', ']', '(', ')', '~', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' ]
         for ch in spl_ch:
             txt = txt.replace(ch,f'\\{ch}')
         return txt
