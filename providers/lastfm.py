@@ -24,13 +24,16 @@ def getYTImageNArtist(name,type):
         artist = item['artists'][0]['name']
     return img, artist
 
-
+def getYTSongDuration(title):
+    search = getYT(title,"songs")
+    if len(search) == 0: return 0
+    return search[0]['duration_seconds']
 
 def requestAPI(slug,start,end,limit=200):
     API = 'https://ws.audioscrobbler.com/2.0/?api_key='+getEnv('LASTFM_API_KEY')+'&format=json&extended=1&method='+slug+'&user='+getEnv('LASTFM_USERNAME')+'&limit='+str(limit)+'&from='+str(start)+'&to='+str(end)
     response = requests.get(API)
     stsCode = response.status_code
-    if stsCode !=requests.codes.ok: raise Exception("Error: Lastfm API request failed. Status code: "+stsCode)
+    if stsCode !=requests.codes.ok: raise Exception(f"Error: Lastfm API request failed. Status code: {stsCode}")
     print("API: fetched "+slug)
     return response.json()
 
@@ -109,10 +112,42 @@ def getRecentTracksTimestamp(start,end,limit=200):
         if 'date' not in track:
             continue
         date_str = track['date']['uts']
-        
         dt.append(datetime.fromtimestamp(int(date_str),tz=TZ))
     
     return reversed(dt)
+
+
+def getDurationSpent(start,end,limit=200):
+    global cache
+    cache = {}
+    totalDuration = 0
+    def getDuration(track):
+        songName = track['name']
+        artistName = track['artist']['name']
+        albumName = track['album']['#text']
+        title = f"{songName} - {artistName} - {albumName}"
+        dur = cache.get(title,0)
+        if not dur:
+            dur = getYTSongDuration(title)
+            cache[title] = dur
+        return dur
+        
+    tracks = getRecentTracks(start,end,limit)
+    TZ = timezone('Asia/Kolkata')
+    for i in range(1,len(tracks)):
+        prevTrack = tracks[i-1]
+        if 'date' not in prevTrack:
+            continue
+        
+        curTrack = tracks[i]
+        prev_ts = prevTrack['date']['uts']
+        cur_ts = curTrack['date']['uts']
+        dur = int(prev_ts) - int(cur_ts)
+        if dur > 300: #5 minutes
+            dur = getDuration(prevTrack)
+        totalDuration+= dur
+    totalDuration+= getDuration(tracks[-1])
+    return totalDuration
 
 def findTopRatings(start,end,limit=200):
     tracks = getRecentTracks(start,end,limit)

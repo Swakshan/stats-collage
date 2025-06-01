@@ -11,17 +11,18 @@ and sends it to your telegram channel
 ## 📸 Final output
 <details>
     <summary>LastFM - Weekly</summary>
-    <img src="./images/doc/lastFM_weekly.jpg" alt="lastfm-weekly.jpg" width="370.75" height="593.75"/>
+    <img src="./images/doc/lastFM_weekly.webp" alt="lastfm-weekly.webp" width="370.75" height="593.75"/>
 </details>
 
 <details>
     <summary>LastFM - Monthly</summary>
-    <img src="./images/doc/lastFM_monthly.jpg" alt="lastfm-monthly.jpg" width="370.75" height="593.75"/>
+    <img src="./images/doc/lastFM_monthly.webp" alt="lastfm-monthly.webp" width="370.75" height="593.75"/></br></br>
+    <img src="./images/doc/lastFM_monthly_calendar.webp" alt="lastfm-monthly-calendar.webp" width="370" height="410"/>
 </details>
 
 <details>
     <summary>Trakt - Monthly - Chart</summary>
-    <img src="./images/doc/trakt_movies_chart.jpg" alt="trakt-monthly-chart.jpg" width="370.75" height="593.75"/>
+    <img src="./images/doc/trakt_movies_chart.webp" alt="trakt-monthly-chart.webp" width="370.75" height="593.75"/>
 </details>
 
 ## 🔗 Stats profile

@@ -6,6 +6,7 @@ from datetime import datetime,timedelta,timezone as tz
 from pytz import timezone
 from sys import exc_info
 from traceback import format_exception
+from humanfriendly import format_timespan
 
 load_dotenv()
 
@@ -54,6 +55,13 @@ def monthLabel(start,end):
     
     return mName,label
 
+def timeSpentLabel(end,timeSpent):
+    e = datetime.fromtimestamp(end)
+    
+    totalTime = int(e.strftime("%d")) * 86400 # end date * seconds in one day
+    percentage = (timeSpent / totalTime) * 100
+    label = format_timespan(timeSpent)
+    return label,f"{percentage:.2f}%"
 
 def getMonthlyTimestamps():
     TZ = timezone('Asia/Kolkata')

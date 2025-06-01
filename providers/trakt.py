@@ -18,7 +18,7 @@ def requestAPI(slug,start,end,limit):
     
     response = requests.get(API,headers=HDR)
     stsCode = response.status_code
-    if stsCode !=requests.codes.ok: raise Exception("Error: Trakt API request failed. Status code: "+stsCode)
+    if stsCode !=requests.codes.ok: raise Exception(f"Error: Trakt API request failed. Status code: {stsCode}")
     print("API: fetched "+slug)
     rd = {}
     rd['data'] = response.json()

@@ -4,3 +4,4 @@ requests
 ytmusicapi
 pytz
 matplotlib
+humanfriendly

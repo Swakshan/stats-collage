@@ -13,6 +13,8 @@ CACHE_FOLDER = "./cache"
 IMGS_FOLDER = "./images"
 FONT_ROBOTO_SEMI_BOLD = CACHE_FOLDER+"/Roboto-SemiBold.ttf"
 IMG_TEMP = IMGS_FOLDER+"/template.jpg"
+IMG_CALENDAR_TEMP = IMGS_FOLDER+"/template_calendar.jpg"
+IMG_CALENDAR = IMGS_FOLDER+"/calendar.png"
 IMG_HEART = IMGS_FOLDER+"/heart.jpg"
 IMG_FINAL = IMGS_FOLDER+"/final.png"
 IMG_ARTIST = IMGS_FOLDER+"/TopArtist.png"
@@ -149,10 +151,21 @@ class Tele:
         
         return self.__sendRequest('/sendMessage',cont)
         
-    def sendImage(self,message,imagePath):
-        cont = {'caption':message}
-        file = {'photo':open(imagePath,'rb')}
-        return self.__sendRequest('/sendPhoto',cont,file)
+    def sendImage(self,message,imagePath:list):
+        media = []
+        files = {}
+
+        for i, path in enumerate(imagePath):
+            file_key = f'photo{i}'
+            files[file_key] = open(path, 'rb')
+            media.append({
+                "type": "photo",
+                "media": f"attach://{file_key}"
+            })
+            
+        media[0]['caption'] = message
+        cont = {"media":json.dumps(media)}
+        return self.__sendRequest('/sendMediaGroup',cont,files)
 
 
 
