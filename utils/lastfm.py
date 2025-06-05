@@ -274,9 +274,18 @@ def buildCalendarGrid(start, end):
 
 
 def buildCalendar(mLabel: str, timeSpent: str,percentage:str, grid: list):
+    def textAlign(textContent:dict,align:str):
+        bbox = draw.textbbox((0, 0), **textContent)
+        if align == "left":
+            return bbox[2] - bbox[0]
+        elif align == "center":
+            return (bbox[2] - bbox[0]) // 2
+        
+        
     CLR_YELLOW = "#fff435"
     CLR_BLUE = "#8cdcfe"
     CLR_RED = "#ff0100"
+    total = 0
 
     BG = Image.open(IMG_CALENDAR_TEMP)
     draw = ImageDraw.Draw(BG)
@@ -303,19 +312,18 @@ def buildCalendar(mLabel: str, timeSpent: str,percentage:str, grid: list):
             info = weekday
             if not info:
                 continue
-            day = str(info["d"])
-            count = str(info["c"])
+            day = info["d"]
+            count = info["c"]
             isMax = info["m"]
+            total+=count
 
-            textContent = {"text": day, "font": dayFont}
-            bbox = draw.textbbox((0, 0), **textContent)
-            aligned_x = day_x_init + day_x_skip - (bbox[2] - bbox[0])
+            textContent = {"text": str(day), "font": dayFont}
+            aligned_x = day_x_init + day_x_skip - textAlign(textContent,"left")
             aligned_y = day_y_init + day_y_skip
             draw.text((aligned_x, aligned_y), **textContent)
 
-            textContent = {"text": count, "font": countFont}
-            bbox = draw.textbbox((0, 0), **textContent)
-            aligned_x = count_x_init + count_x_skip - ((bbox[2] - bbox[0]) // 2)
+            textContent = {"text": str(count), "font": countFont}
+            aligned_x = count_x_init + count_x_skip - textAlign(textContent,"center")
             aligned_y = count_y_init + count_y_skip
             fill = CLR_BLUE if int(count) else CLR_RED
             fill = CLR_YELLOW if isMax else fill
@@ -323,8 +331,19 @@ def buildCalendar(mLabel: str, timeSpent: str,percentage:str, grid: list):
 
     monthLabelFont = ImageFont.truetype(FONT_ROBOTO_SEMI_BOLD, 80)
     draw.text((0, 0), text=mLabel, font=monthLabelFont)
-    draw.text((123, 716), text=timeSpent, font=dayFont, fill=CLR_YELLOW)
-    draw.text((225, 767), text=percentage, font=dayFont, fill=CLR_YELLOW)
+    
+    # Total count.
+    textContent = {"text": str(total), "font": dayFont}
+    x = 370 - textAlign(textContent,"center")
+    draw.text((x, 723),**textContent, fill=CLR_YELLOW)
+    
+    # Time spent.
+    draw.text((121, 784), text=timeSpent, font=dayFont, fill=CLR_YELLOW)
+    
+    # Percentage.
+    textContent = {"text": percentage, "font": dayFont}
+    x = 250 - textAlign(textContent,"center")
+    draw.text((x, 833), **textContent, fill=CLR_YELLOW)
 
     BG.save(IMG_CALENDAR, optimize=True)
     print("LOG: Calendar built")
@@ -337,7 +356,7 @@ def buildMonthlyCalendar():
     mName, mDays = monthLabel(start, end)
     timeSpent = getDurationSpent(start, end)
     tsLabel,percentage = timeSpentLabel(end, timeSpent)
-
+    
     grid = buildCalendarGrid(start, end)
     buildCalendar(mName, tsLabel,percentage ,grid)
     return IMG_CALENDAR
